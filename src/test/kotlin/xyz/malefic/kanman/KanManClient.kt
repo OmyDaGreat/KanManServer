@@ -1,4 +1,4 @@
-package xyz.malefic.daily
+package xyz.malefic.kanman
 
 import org.http4k.client.OkHttp
 import org.http4k.core.HttpHandler
@@ -13,7 +13,7 @@ fun main() {
 
     val printingClient: HttpHandler = PrintResponse().then(client)
 
-    val response: Response = printingClient(Request(GET, "http://localhost:7290/api/ping"))
+    val response: Response = printingClient(Request(GET, "http://localhost:6320/api/ping"))
 
     println(response.bodyString())
 }

@@ -23,10 +23,10 @@ Or pull and run the `maleficmarauder/dailymalefic` image directly from Docker Hu
 
 ```bash
 docker pull maleficmarauder/dailymalefic
-docker run -p 7290:7290 -e API_KEY=your-secret-key -v entry_data:/data maleficmarauder/dailymalefic
+docker run -p 6320:6320 -e API_KEY=your-secret-key -v entry_data:/data maleficmarauder/dailymalefic
 ```
 
-These both start the app on port `7290`, mount `entry_data` to `/data`, and pass `API_KEY` through if you set it.
+These both start the app on port `6320`, mount `entry_data` to `/data`, and pass `API_KEY` through if you set it.
 
 ## Endpoints
 

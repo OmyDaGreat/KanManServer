@@ -1,4 +1,4 @@
-package xyz.malefic.daily
+package xyz.malefic.kanman
 
 import org.http4k.core.HttpHandler
 import org.http4k.core.Method.DELETE
@@ -17,13 +17,10 @@ import org.http4k.routing.routes
 import org.http4k.server.Undertow
 import org.http4k.server.asServer
 
-fun createApp(
-    storage: EntryStorage,
-    apiKey: String? = System.getenv("API_KEY"),
-): HttpHandler {
+fun createApp(): HttpHandler {
     val corsPolicy =
         CorsPolicy(
-            headers = listOf("Content-Type", API_KEY_HEADER),
+            headers = listOf("Content-Type"),
             methods = listOf(GET, POST, PUT, DELETE),
             originPolicy = AllowAllOriginPolicy,
         )
@@ -34,22 +31,20 @@ fun createApp(
         routes(
             "/api/ping" bind GET to { Response(OK).body("pong") },
             "/api/health" bind GET to { Response(OK).body("healthy") },
-            "/api/auth/validate" bind GET to authValidateHandler(apiKey),
-            "/api/entries" bind GET to listEntriesHandler(storage),
-            "/api/entries/{id}" bind GET to getEntryByIdHandler(storage),
-            "/api/entries" bind POST to createEntryHandler(storage, apiKey),
-            "/api/entries/{id}" bind PUT to updateEntryHandler(storage, apiKey),
-            "/api/entries/{id}" bind DELETE to deleteEntryHandler(storage, apiKey),
+            "/api/board/{id}" bind GET to { request ->
+                val id = request.query("id")
+                Response(OK).body("id: $id") // TODO: Return board contents // TODO: Figure out auth w/ visibility
+            },
         ),
     )
 }
 
-val app: HttpHandler by lazy { createApp(EntryStorage()) }
+val app: HttpHandler by lazy { createApp() }
 
 fun main() {
     val printingApp: HttpHandler = PrintRequest().then(app)
 
-    val server = printingApp.asServer(Undertow(7290)).start()
+    val server = printingApp.asServer(Undertow(6320)).start()
 
     println("Server started on port ${server.port()}!")
 }

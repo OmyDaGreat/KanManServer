@@ -2,14 +2,14 @@ services:
   app:
     build: .
     ports:
-      - "7290:7290"
+      - "6320:6320"
     environment:
       - JAVA_OPTS=-Xmx512m
       - API_KEY=${API_KEY:-}
     volumes:
       - entry_data:/data
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:7290/health"]
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:6320/health"]
       interval: 30s
       timeout: 10s
       retries: 3

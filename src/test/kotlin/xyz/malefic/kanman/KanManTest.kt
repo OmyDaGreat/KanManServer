@@ -1,4 +1,4 @@
-package xyz.malefic.daily
+package xyz.malefic.kanman
 
 import io.kotest.matchers.shouldBe
 import org.http4k.core.HttpHandler
@@ -9,8 +9,8 @@ import org.http4k.core.Method.PUT
 import org.http4k.core.Request
 import org.http4k.core.Status.Companion.BAD_REQUEST
 import org.http4k.core.Status.Companion.CREATED
-import org.http4k.core.Status.Companion.NO_CONTENT
 import org.http4k.core.Status.Companion.NOT_FOUND
+import org.http4k.core.Status.Companion.NO_CONTENT
 import org.http4k.core.Status.Companion.OK
 import org.http4k.core.with
 import org.http4k.kotest.shouldHaveStatus
@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import java.nio.file.Path
 
-class DailyMaleficTest {
+class KanManTest {
     @TempDir
     lateinit var tempDir: Path
 

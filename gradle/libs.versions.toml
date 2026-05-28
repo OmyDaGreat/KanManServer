@@ -3,7 +3,6 @@ kotlin = "2.3.21"
 http4k = "6.48.0.0"
 jackson = "2.21.3"
 junit = "6.1.0"
-ytm = "0.4.3"
 coroutines = "1.11.0"
 
 [libraries]
@@ -17,13 +16,9 @@ http4k-testing-approval = { module = "org.http4k:http4k-testing-approval" }
 http4k-testing-hamkrest = { module = "org.http4k:http4k-testing-hamkrest" }
 http4k-testing-kotest = { module = "org.http4k:http4k-testing-kotest" }
 
-jackson-datatype-jsr310 = { module = "com.fasterxml.jackson.datatype:jackson-datatype-jsr310", version.ref = "jackson" }
-
 junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
 junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
-
-ytm-api = { group = "dev.toastbits", name = "ytm-kt", version.ref = "ytm" }
 
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 

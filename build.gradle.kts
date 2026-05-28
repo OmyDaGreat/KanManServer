@@ -21,7 +21,7 @@ kotlin {
 }
 
 application {
-    mainClass = "xyz.malefic.daily.DailyMaleficKt"
+    mainClass = "xyz.malefic.kanman.DailyMaleficKt"
 }
 
 repositories {
@@ -49,12 +49,7 @@ tasks {
 dependencies {
     implementation(platform(libs.http4k.bom))
     implementation(libs.bundles.http4k)
-    implementation(libs.jackson.datatype.jsr310)
     implementation(libs.kotlinx.coroutines.core)
-
-    implementation(libs.ytm.api) {
-        exclude(group = "com.github.teamnewpipe.NewPipeExtractor", module = "NewPipeExtractor")
-    }
 
     testImplementation(libs.bundles.http4k.testing)
     testImplementation(libs.junit.jupiter.api)
