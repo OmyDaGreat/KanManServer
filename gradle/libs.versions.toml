@@ -6,6 +6,7 @@ coroutines = "1.11.0"
 sqlite = "3.53.1.0"
 exposed = "1.3.0"
 bcrypt = "0.10.2"
+kermit = "2.1.0"
 
 [libraries]
 http4k-bom = { group = "org.http4k", name = "http4k-bom", version.ref = "http4k" }
@@ -31,6 +32,8 @@ junit-platform-launcher = { group = "org.junit.platform", name = "junit-platform
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
 
 bcrypt = { group = "at.favre.lib", name = "bcrypt", version.ref = "bcrypt" }
+
+kermit = { group = "co.touchlab", name = "kermit", version.ref = "kermit" }
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }

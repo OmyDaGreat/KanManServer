@@ -51,6 +51,7 @@ dependencies {
     implementation(libs.bundles.storage)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.bcrypt)
+    implementation(libs.kermit)
 
     testImplementation(libs.bundles.http4k.testing)
     testImplementation(libs.junit.jupiter.api)

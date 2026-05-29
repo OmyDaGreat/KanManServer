@@ -17,7 +17,6 @@ import org.http4k.routing.bind
 import org.http4k.routing.routes
 import org.http4k.server.Undertow
 import org.http4k.server.asServer
-import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.jdbc.Database
 import org.jetbrains.exposed.v1.jdbc.SchemaUtils
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
@@ -54,7 +53,34 @@ fun createApp(): HttpHandler {
                 } catch (e: Exception) {
                     return@POST Response(Status.BAD_REQUEST).body("Failed to create user: $e")
                 }
+
                 Response(OK).body("User added with username $username and password $password")
+            },
+            "/api/board/create" bind POST to POST@{ request ->
+                val title = request.query("title") ?: return@POST Response(Status.BAD_REQUEST).body("Expected title, instead got nothing")
+                val visibilityStr =
+                    request.query("visibility")
+                        ?: return@POST Response(Status.BAD_REQUEST).body("Expected visibility (PUBLIC/PRIVATE), instead got nothing")
+                val visibility =
+                    try {
+                        Visibility.valueOf(visibilityStr.uppercase())
+                    } catch (e: IllegalArgumentException) {
+                        return@POST Response(Status.BAD_REQUEST)
+                            .body("Invalid visibility '$visibilityStr'. Expected PUBLIC or PRIVATE.")
+                    }
+
+                try {
+                    transaction {
+                        BoardEntity.new {
+                            this.title = title
+                            this.visibility = visibility
+                        }
+                    }
+                } catch (e: Exception) {
+                    return@POST Response(Status.BAD_REQUEST).body("Failed to create board: $e")
+                }
+
+                Response(OK).body("Board created with title $title and visibility $visibility")
             },
         ),
     )
@@ -69,6 +95,7 @@ fun main() {
     )
 
     transaction {
+        addLogger(SQLKermit)
         exec("PRAGMA foreign_keys = ON;")
         SchemaUtils.create(Users, Boards, StickyNotes, BoardUsers)
     }
