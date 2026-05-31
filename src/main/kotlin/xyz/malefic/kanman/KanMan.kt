@@ -11,6 +11,7 @@ import xyz.malefic.kanman.data.Boards
 import xyz.malefic.kanman.data.SQLKermit
 import xyz.malefic.kanman.data.StickyNotes
 import xyz.malefic.kanman.data.Users
+import xyz.malefic.kanman.http.http
 
 fun main() {
     Database.connect(
