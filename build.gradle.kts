@@ -2,7 +2,8 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_25
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 plugins {
-    alias(libs.plugins.kotlin.jvm)
+    kotlin("jvm") version libs.versions.kotlin
+    kotlin("plugin.serialization") version libs.versions.kotlin
     application
 }
 
@@ -53,6 +54,7 @@ dependencies {
     implementation(libs.bundles.http4k)
     implementation(libs.bundles.storage)
     implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.serialization.json)
     implementation(libs.bcrypt)
     implementation(libs.kermit)
 
