@@ -18,14 +18,14 @@ import xyz.malefic.kanman.data.refreshRequestLens
 import xyz.malefic.kanman.data.toModel
 import xyz.malefic.kanman.data.toResponseModel
 import xyz.malefic.kanman.data.tokenResponseLens
+import xyz.malefic.kanman.data.transaction.getTokensFromLogin
+import xyz.malefic.kanman.data.transaction.refreshTokens
 import xyz.malefic.kanman.data.userRequestLens
 import xyz.malefic.kanman.data.userResponseLens
 import xyz.malefic.kanman.util.auth
 import xyz.malefic.kanman.util.error
-import xyz.malefic.kanman.util.getTokensFromLogin
 import xyz.malefic.kanman.util.hashPassword
 import xyz.malefic.kanman.util.model
-import xyz.malefic.kanman.util.refreshTokens
 
 val post =
     arrayOf(

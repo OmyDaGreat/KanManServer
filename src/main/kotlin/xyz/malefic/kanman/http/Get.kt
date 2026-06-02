@@ -19,8 +19,8 @@ import xyz.malefic.kanman.data.Visibility.PUBLIC
 import xyz.malefic.kanman.data.boardLens
 import xyz.malefic.kanman.data.boardSummaryListLens
 import xyz.malefic.kanman.data.toSummaryModel
+import xyz.malefic.kanman.data.transaction.currentUser
 import xyz.malefic.kanman.util.auth
-import xyz.malefic.kanman.util.currentUser
 import xyz.malefic.kanman.util.error
 import xyz.malefic.kanman.util.toVisibility
 import kotlin.uuid.Uuid
