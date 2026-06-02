@@ -3,7 +3,6 @@ package xyz.malefic.kanman.http
 import org.http4k.core.Method.GET
 import org.http4k.core.Response
 import org.http4k.core.Status.Companion.BAD_REQUEST
-import org.http4k.core.Status.Companion.INTERNAL_SERVER_ERROR
 import org.http4k.core.Status.Companion.NOT_FOUND
 import org.http4k.core.Status.Companion.OK
 import org.http4k.core.Status.Companion.UNAUTHORIZED
@@ -16,6 +15,8 @@ import xyz.malefic.kanman.data.boardSummaryListLens
 import xyz.malefic.kanman.data.transaction.currentUser
 import xyz.malefic.kanman.data.transaction.getUserBoards
 import xyz.malefic.kanman.util.auth
+import xyz.malefic.kanman.util.catch
+import xyz.malefic.kanman.util.catchPlus
 import xyz.malefic.kanman.util.error
 import xyz.malefic.kanman.util.toVisibility
 import kotlin.uuid.Uuid
@@ -25,35 +26,22 @@ val get =
         "/api/ping" bind GET to { Response(OK).body("pong") },
         "/api/health" bind GET to { Response(OK).body("healthy") },
         "/api/board/{id}" bind GET to
-            auth { user, request ->
-                val id =
-                    request.path("id")?.let { Uuid.parse(it) }
-                        ?: return@auth Response(BAD_REQUEST).with("Invalid board id".error)
+            catchPlus("Failed to retrieve board") {
+                auth { user, request ->
+                    val id = request.path("id")?.let { Uuid.parse(it) } ?: return@auth Response(BAD_REQUEST).with("Invalid board id".error)
+                    val board = user.boards.firstOrNull { it.id == id } ?: return@auth Response(NOT_FOUND).with("Board not found".error)
 
-                try {
-                    Response(OK).with(
-                        boardLens of
-                            (
-                                user.boards.firstOrNull { it.id == id }
-                                    ?: return@auth Response(NOT_FOUND).with("Board not found".error)
-                            ),
-                    )
-                } catch (e: Exception) {
-                    Response(INTERNAL_SERVER_ERROR).with("Failed to retrieve board: $e".error)
+                    Response(OK).with(boardLens of board)
                 }
             },
-        "/api/boards" bind GET to REQUEST@{ request ->
-            try {
+        "/api/boards" bind GET to
+            catch("Failed to list boards") { request ->
                 val visibility = request.query("visibility")?.toVisibility
                 val user = currentUser(request)
-
                 val boards =
                     getUserBoards(visibility, user)
-                        ?: run { return@REQUEST Response(UNAUTHORIZED).with("Authentication required for private boards".error) }
+                        ?: run { return@catch Response(UNAUTHORIZED).with("Authentication required for private boards".error) }
 
                 Response(OK).with(boardSummaryListLens of BoardSummaryListModel(boards))
-            } catch (e: Exception) {
-                Response(INTERNAL_SERVER_ERROR).with("Failed to list boards: $e".error)
-            }
-        },
+            },
     )

@@ -1,9 +1,11 @@
 package xyz.malefic.kanman.util
 
+import co.touchlab.kermit.Logger
 import org.http4k.core.HttpHandler
 import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.core.Status.Companion.BAD_REQUEST
+import org.http4k.core.Status.Companion.INTERNAL_SERVER_ERROR
 import org.http4k.core.Status.Companion.UNAUTHORIZED
 import org.http4k.core.then
 import org.http4k.core.with
@@ -12,6 +14,23 @@ import xyz.malefic.kanman.data.UserResponseModel
 import xyz.malefic.kanman.data.errorLens
 import xyz.malefic.kanman.data.errorModel
 import xyz.malefic.kanman.data.transaction.currentUser
+
+fun catch(
+    message: String,
+    func: HttpHandler,
+) = { request: Request ->
+    try {
+        func(request)
+    } catch (e: Exception) {
+        Logger.e(e, "HTTP") { message }
+        Response(INTERNAL_SERVER_ERROR).with(message.error)
+    }
+}
+
+fun catchPlus(
+    message: String,
+    func: () -> HttpHandler,
+) = catch(message, func())
 
 fun <A> model(
     lens: BiDiBodyLens<A>,
