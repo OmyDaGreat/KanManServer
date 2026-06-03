@@ -13,9 +13,9 @@ import xyz.malefic.kanman.data.StickyNoteEntity
 import xyz.malefic.kanman.data.toModel
 import xyz.malefic.kanman.data.transaction.isBoardValid
 import xyz.malefic.kanman.util.ConnectionRegistry
-import xyz.malefic.kanman.util.WsAbort
 import xyz.malefic.kanman.util.abortWS
 import xyz.malefic.kanman.util.authWS
+import xyz.malefic.kanman.util.error
 import xyz.malefic.kanman.util.wsLens
 import kotlin.uuid.Uuid
 
@@ -48,7 +48,7 @@ val ws =
                                 ConnectionRegistry.broadcast(id, WsMessage("Sticky note created: $stickyNote."))
                             } catch (e: Exception) {
                                 Logger.e(e, "WebSockets") { "Failed to create sticky note" }
-                                ws.send(WsMessage("Internal server error"))
+                                ws.error("Internal server error")
                             }
                         }
 
@@ -66,7 +66,7 @@ val ws =
                         }
                     } catch (e: Exception) {
                         Logger.e(e, "WebSockets") { "Error during WS setup" }
-                        ws.send(WsMessage(if (e is WsAbort) e.message else "Internal server error"))
+                        ws.error(e.message ?: "Internal server error")
                         ws.close()
                     }
                 }

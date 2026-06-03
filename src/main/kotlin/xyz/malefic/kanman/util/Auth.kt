@@ -2,7 +2,6 @@ package xyz.malefic.kanman.util
 
 import at.favre.lib.crypto.bcrypt.BCrypt
 import org.http4k.core.Filter
-import org.http4k.core.Response
 import org.http4k.core.Status.Companion.UNAUTHORIZED
 import org.http4k.core.with
 import org.http4k.lens.RequestKey
@@ -34,11 +33,11 @@ val auth: Filter =
                     ?.removePrefix("Bearer ")
                     ?.trim()
             if (token.isNullOrBlank()) {
-                Response(UNAUTHORIZED).with(value("Missing bearer token".error))
+                error(UNAUTHORIZED) { "Missing bearer token" }
             } else {
                 val user = getUserFromAccessToken(token)
                 if (user == null) {
-                    Response(UNAUTHORIZED).with("Invalid or expired token".error)
+                    error(UNAUTHORIZED) { "Invalid or expired token" }
                 } else {
                     next(request.with(authenticatedUserId of user.id))
                 }

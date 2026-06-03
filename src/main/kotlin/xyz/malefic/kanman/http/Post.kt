@@ -1,10 +1,8 @@
 package xyz.malefic.kanman.http
 
 import org.http4k.core.Method.POST
-import org.http4k.core.Response
 import org.http4k.core.Status.Companion.OK
 import org.http4k.core.Status.Companion.UNAUTHORIZED
-import org.http4k.core.with
 import org.http4k.routing.bind
 import xyz.malefic.kanman.data.BoardCreateModel
 import xyz.malefic.kanman.data.RefreshRequestModel
@@ -17,6 +15,7 @@ import xyz.malefic.kanman.util.authModel
 import xyz.malefic.kanman.util.catchPlus
 import xyz.malefic.kanman.util.error
 import xyz.malefic.kanman.util.model
+import xyz.malefic.kanman.util.response
 import xyz.malefic.kanman.util.value
 
 val post =
@@ -24,20 +23,18 @@ val post =
         "/api/login" bind POST to
             catchPlus("Failed to process login") {
                 model<UserRequestModel> { _, login ->
-                    val tokens =
-                        getTokensFromLogin(login) ?: return@model Response(UNAUTHORIZED).with("Invalid username or password".error)
+                    val tokens = getTokensFromLogin(login) ?: return@model error(UNAUTHORIZED) { "Invalid username or password" }
 
-                    Response(OK).with(value(tokens))
+                    response(OK, value(tokens))
                 }
             },
         "/api/token/refresh" bind POST to
             catchPlus("Failed to refresh tokens") {
                 model<RefreshRequestModel> { _, refresh ->
                     val tokens =
-                        refreshTokens(refresh.refreshToken)
-                            ?: return@model Response(UNAUTHORIZED).with("Invalid or expired refresh token".error)
+                        refreshTokens(refresh.refreshToken) ?: return@model error(UNAUTHORIZED) { "Invalid or expired refresh token" }
 
-                    Response(OK).with(value(tokens))
+                    response(OK, value(tokens))
                 }
             },
         "/api/user/register" bind POST to
@@ -45,7 +42,7 @@ val post =
                 model<UserRequestModel> { _, user ->
                     val userResult = createUser(user)
 
-                    Response(OK).with(value(userResult))
+                    response(OK, value(userResult))
                 }
             },
         "/api/board" bind POST to
@@ -53,7 +50,7 @@ val post =
                 authModel<BoardCreateModel> { user, boardRequest ->
                     val boardResponse = createBoard(boardRequest, user)
 
-                    Response(OK).with(value(boardResponse))
+                    response(OK, value(boardResponse))
                 }
             },
     )
