@@ -16,15 +16,15 @@ import kotlin.uuid.Uuid
 val delete =
     arrayOf(
         "/api/board/{id}" bind DELETE to
-            auth REQUEST@{ user, request ->
-                val id = Uuid.parse(request.path("id") ?: return@REQUEST Response(BAD_REQUEST).with("Invalid board".error))
+            auth { user ->
+                val id = Uuid.parse(path("id") ?: return@auth Response(BAD_REQUEST).with("Invalid board".error))
 
                 try {
                     if (!deleteBoard(id, user)) {
-                        return@REQUEST Response(BAD_REQUEST).with("Invalid board".error)
+                        return@auth Response(BAD_REQUEST).with("Invalid board".error)
                     }
                 } catch (e: Exception) {
-                    return@REQUEST Response(INTERNAL_SERVER_ERROR).with("Failed to create board: $e".error)
+                    return@auth Response(INTERNAL_SERVER_ERROR).with("Failed to create board: $e".error)
                 }
 
                 Response(OK)
